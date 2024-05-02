@@ -53,7 +53,7 @@ def main():
     print(f"You have {NUM_OF_GUESS} guesses")
 
     letter = input("Guess a letter ")
-    print(letter)
+    print(letter.lower())
 
 if __name__ == "__main__":
     main()
