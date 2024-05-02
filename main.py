@@ -40,7 +40,19 @@ def printStatus():
 
 def guessLetter():
     letter = input("Guess a letter ")
-    print(letter.lower())
+    if len(letter) > 1:
+        if not letter.isalpha():
+            print("E3")
+        else:
+            print("E1")
+    elif not letter.isalpha():
+        print("E2")
+    else:
+        print(letter.lower())
+
+
+
+
 
 def enterWord():
     word = input("Please enter a word: ")
@@ -57,7 +69,7 @@ def main():
                         __/ |
                        |___/""")
     print(f"You have {NUM_OF_GUESS} guesses")
-
+    guessLetter()
     enterWord()
 
 if __name__ == "__main__":
