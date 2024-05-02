@@ -39,6 +39,7 @@ def printStatus():
     print(GAME_PARTS[NUM_OF_GUESS-6])
 
 
+
 def main():
     print("Welcome to the game Hangman")
     print("""    _    _
@@ -50,7 +51,9 @@ def main():
                         __/ |
                        |___/""")
     print(f"You have {NUM_OF_GUESS} guesses")
-    printStatus()
+
+    letter = input("Guess a letter ")
+    print(letter)
 
 if __name__ == "__main__":
     main()
