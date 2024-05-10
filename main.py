@@ -1,46 +1,42 @@
 import random
-
-GUESSED_LETTERS = ['s', 'p', 'j', 'i', 'm', 'k']
+SECRET_WORD = ""
+GUESSED_LETTERS = []
 NUM_OF_GUESS = 6;
 '''random.randint(5, 11)'''
-GAME_PARTS = ["""x-------x""", """    x-------x
+GAME_PARTS = {6: """x-------x""", 5: """    x-------x
     |
     |
     |
     |
     |
-""", """    x-------x
+""", 4: """    x-------x
     |       |
     |       0
     |
     |
-    |""", """    x-------x
+    |""", 3: """    x-------x
     |       |
     |       0
     |       |
     |
     |
-""", """    x-------x
+""", 2: """    x-------x
     |       |
     |       0
     |      /|\\
     |
-    |""", """    x-------x
+    |""", 1: """    x-------x
     |       |
     |       0
-    |      /|\
+    |      /|\\
     |      /
     |
-""", """    x-------x
+""", 0: """    x-------x
     |       |
     |       0
-    |      /|\
-    |      / \
-    |"""]
-
-
-def print_status():
-    print(GAME_PARTS[NUM_OF_GUESS - 6])
+    |      /|\\
+    |      / \\
+    |"""}
 
 
 def guess_letter():
@@ -83,14 +79,39 @@ def show_hidden_word(secret_word, old_letters_guessed):
 
 
 def check_win(secret_word, old_letters_guessed):
-    for letter in secret_word :
+    for letter in secret_word:
         if not old_letters_guessed.__contains__(letter): return False
     return True
+
 
 def enterWord():
     word = input("Please enter a word: ")
     print("_ " * len(word))
 
+
+def print_hangman(num_of_tries):
+    print(GAME_PARTS[num_of_tries])
+
+
+def choose_word(file_path, index):
+    f = open(file_path)
+    words = list(f.read().split(" "))
+    f.close()
+    return (len(words), words[(index - 1) % len(words)])
+
+
+def setup_game():
+    filePath = input("Please enter the file path: ")
+    index = int(input("Please enter the index of the word: "))
+    global SECRET_WORD
+    SECRET_WORD = choose_word(filePath, index)[1]
+    global GUESSED_LETTERS
+    GUESSED_LETTERS = []
+    print("_ " * len(SECRET_WORD))
+
+
+def check_letter_inword(secret_word,letter_guessed):
+    return secret_word.__contains__(letter_guessed)
 
 def main():
     print("Welcome to the game Hangman")
@@ -102,13 +123,23 @@ def main():
    |_|  |_|\__,_|_| |_|\__, |_| |_| |_|\__,_|_| |_|
                         __/ |
                        |___/""")
-    print(f"You have {NUM_OF_GUESS} guesses")
-    print(try_update_letter_guessed(input("Enter a letter: "), GUESSED_LETTERS))
-    print(try_update_letter_guessed(input("Enter a letter: "), GUESSED_LETTERS))
-    print(show_hidden_word("mammals", GUESSED_LETTERS))
-    print(check_win("kim", GUESSED_LETTERS))
-    enterWord()
+    setup_game()
+    global NUM_OF_GUESS, GUESSED_LETTERS,SECRET_WORD
 
+    print(f"You have {NUM_OF_GUESS} guesses")
+    while NUM_OF_GUESS>0 and not check_win(SECRET_WORD,GUESSED_LETTERS):
+        letter = input("Enter a letter: ")
+        if not try_update_letter_guessed(letter,GUESSED_LETTERS) or not check_letter_inword(SECRET_WORD,letter):
+            print('wrong input try again')
+            NUM_OF_GUESS -= 1
+
+        print_hangman(NUM_OF_GUESS)
+        print(show_hidden_word(SECRET_WORD, GUESSED_LETTERS))
+    if check_win(SECRET_WORD,GUESSED_LETTERS):
+        print("Congrats! You win!")
+    else:
+        print("Sorry, you lose :(")
+        print("The word was " + SECRET_WORD)
 
 if __name__ == "__main__":
     main()
